@@ -2,11 +2,10 @@ pipeline {
     agent any
 
     tools {
-        nodejs 'Node18' // Assure-toi que ce nom correspond à celui dans Jenkins > Tools
+        nodejs 'Node18'  // nom exact dans Jenkins
     }
 
     stages {
-
         stage('Check environnement') {
             steps {
                 bat 'echo Environnement Windows détecté'
@@ -25,15 +24,13 @@ pipeline {
             }
         }
 
-        stage('Arrêter anciens conteneurs (optionnel)') {
+        stage('Arrêter ancien conteneur (sécurisé)') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
                     bat '''
-                    echo Arrêt des conteneurs existants...
-                    for /F %%i in ('docker ps -a -q --filter "ancestor=nodejs-test-app"') do (
-                        docker stop %%i || echo Aucun à arrêter
-                        docker rm %%i   || echo Aucun à supprimer
-                    )
+                    echo Suppression de l'ancien conteneur s’il existe...
+                    docker stop nodejs-test-container || echo Aucun conteneur à arrêter
+                    docker rm nodejs-test-container || echo Aucun conteneur à supprimer
                     '''
                 }
             }
@@ -41,8 +38,10 @@ pipeline {
 
         stage('Lancer le conteneur Docker') {
             steps {
-                bat 'docker run -d -p 3000:3000 nodejs-test-app'
-                bat 'docker ps'
+                bat '''
+                echo Lancement du conteneur nodejs-test-container...
+                docker run -d -p 3000:3000 --name nodejs-test-container nodejs-test-app
+                '''
             }
         }
     }
