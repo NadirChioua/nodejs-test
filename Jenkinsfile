@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        nodejs 'Node18'  // Assure-toi que ce nom est bien défini dans Jenkins > Global Tool Configuration
+        nodejs 'Node18'  // Nom défini dans Jenkins > Global Tool Configuration
     }
 
     stages {
@@ -30,14 +30,21 @@ pipeline {
             }
         }
 
-        stage('Lancer le conteneur Docker') {
+        stage('Stopper & Supprimer anciens conteneurs Docker') {
             steps {
                 bat '''
-                    echo Vérification des conteneurs existants basés sur l'image...
-                    FOR /F "tokens=*" %%i IN ('docker ps -q --filter "ancestor=nodejs-test-app"') DO docker stop %%i
-                    echo Lancement d'un nouveau conteneur Docker...
-                    docker run -d -p 3000:3000 nodejs-test-app
+                    echo Arrêt et suppression des anciens conteneurs basés sur nodejs-test-app...
+                    FOR /F "tokens=*" %%i IN ('docker ps -a -q --filter "ancestor=nodejs-test-app"') DO (
+                        docker stop %%i
+                        docker rm %%i
+                    )
                 '''
+            }
+        }
+
+        stage('Lancer un nouveau conteneur Docker') {
+            steps {
+                bat 'docker run -d -p 3000:3000 nodejs-test-app'
             }
         }
     }
