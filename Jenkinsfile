@@ -1,27 +1,35 @@
 pipeline {
-    agent any
+  agent any
 
-    tools {
-        nodejs 'node18'
+  tools {
+    nodejs 'Node18'   // ⚠️ Respecter exactement ce nom
+  }
+
+  stages {
+    stage('Cloner le dépôt') {
+      steps {
+        // Cloner automatiquement le repo depuis GitHub
+        checkout scm
+      }
     }
 
-    stages {
-        stage('Check Env') {
-            steps {
-                bat 'echo Running on Windows'
-            }
-        }
-
-        stage('Install dependencies') {
-            steps {
-                bat 'npm install'
-            }
-        }
-
-        stage('Start Application') {
-            steps {
-                bat 'npm start'
-            }
-        }
+    stage('Check environnement') {
+      steps {
+        bat 'echo Environnement Windows détecté'
+      }
     }
+
+    stage('Installer les dépendances') {
+      steps {
+        bat 'npm install'
+      }
+    }
+
+    stage('Lancer l\'application') {
+      steps {
+        bat 'npm start'
+        // ou bat 'node app.js' selon ton package.json
+      }
+    }
+  }
 }
