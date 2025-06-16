@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        nodejs 'Node18'  // Attention à bien respecter la casse exacte : 'Node18'
+        nodejs 'Node18'  // Assure-toi que c’est bien écrit avec une majuscule : 'Node18'
     }
 
     stages {
@@ -20,8 +20,8 @@ pipeline {
 
         stage('Lancer l\'application') {
             steps {
-                // Lance l'application sans bloquer Jenkins et redirige la sortie dans un fichier log
-                bat 'node app.js > output.log 2>&1 &'
+                // Lance app.js dans une nouvelle fenêtre détachée grâce à start
+                bat 'start "" node app.js'
             }
         }
     }
