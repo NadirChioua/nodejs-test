@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        nodejs 'Node18'  // Assure-toi que c’est bien écrit avec une majuscule : 'Node18'
+        nodejs 'Node18'  // Assure-toi que ce nom correspond exactement dans Jenkins
     }
 
     stages {
@@ -18,10 +18,21 @@ pipeline {
             }
         }
 
-        stage('Lancer l\'application') {
+        stage('Lancer l\'application localement') {
             steps {
-                // Lance app.js dans une nouvelle fenêtre détachée grâce à start
                 bat 'start "" node app.js'
+            }
+        }
+
+        stage('Créer une image Docker') {
+            steps {
+                bat 'docker build -t nodejs-test-app .'
+            }
+        }
+
+        stage('Lancer le conteneur Docker') {
+            steps {
+                bat 'docker run -d -p 3000:3000 nodejs-test-app'
             }
         }
     }
