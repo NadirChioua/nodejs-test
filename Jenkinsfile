@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        nodejs "node18"
+        Nodejs "node18"  // ✔️ Respect exact du nom
     }
 
     stages {
