@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        nodejs 'Node18' // nom exact dans Jenkins
+        nodejs 'Node18' // Assure-toi que ce nom correspond bien à celui configuré dans Jenkins
     }
 
     stages {
@@ -27,18 +27,6 @@ pipeline {
         stage('Créer une image Docker') {
             steps {
                 bat 'docker build -t nodejs-test-app .'
-            }
-        }
-
-        stage('Stopper & Supprimer anciens conteneurs Docker') {
-            steps {
-                bat '''
-                echo Arrêt et suppression des anciens conteneurs basés sur nodejs-test-app...
-                FOR /F "tokens=*" %%i IN ('docker ps -a -q --filter "ancestor=nodejs-test-app"') DO (
-                    docker stop %%i || echo aucun conteneur à stopper
-                    docker rm %%i || echo aucun conteneur à supprimer
-                )
-                '''
             }
         }
 
