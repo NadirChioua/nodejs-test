@@ -32,6 +32,9 @@ pipeline {
 
         stage('Lancer le conteneur Docker') {
             steps {
+                // Stoppe les anciens conteneurs de cette image si nécessaire
+                bat 'FOR /F "tokens=*" %%i IN (\'docker ps -q --filter "ancestor=nodejs-test-app"\') DO docker stop %%i'
+                // Lance un nouveau conteneur
                 bat 'docker run -d -p 3000:3000 nodejs-test-app'
             }
         }
