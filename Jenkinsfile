@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        nodejs 'Node18'  // Assure-toi que Node18 est bien configuré dans Jenkins
+        nodejs 'Node18'  // Assure-toi que ce nom correspond à celui configuré dans Jenkins
     }
 
     stages {
@@ -34,9 +34,9 @@ pipeline {
             steps {
                 bat '''
                 echo Arrêt des conteneurs existants...
-                for /f %%i in ('docker ps -a -q --filter "ancestor=nodejs-test-app"') do (
-                    docker stop %%i || echo Aucun à arrêter
-                    docker rm %%i || echo Aucun à supprimer
+                for /F %%i in ('docker ps -a -q --filter "ancestor=nodejs-test-app"') do (
+                  docker stop %%i || echo Aucun à arrêter
+                  docker rm %%i   || echo Aucun à supprimer
                 )
                 '''
             }
