@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        Nodejs "node18"  // ✔️ Respect exact du nom
+        nodejs 'node18'
     }
 
     stages {
@@ -12,9 +12,9 @@ pipeline {
             }
         }
 
-        stage('Run tests') {
+        stage('Start Application') {
             steps {
-                bat 'npm test'
+                bat 'npm start'
             }
         }
     }
