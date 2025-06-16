@@ -1,0 +1,27 @@
+pipeline {
+    agent any
+
+    tools {
+        nodejs 'node18' 
+    }
+
+    stages {
+        stage('Install dependencies') {
+            steps {
+                sh 'npm install'
+            }
+        }
+
+        stage('Run tests') {
+            steps {
+                sh 'echo Aucun test pour le moment'
+            }
+        }
+
+        stage('Start app') {
+            steps {
+                sh 'node app.js'
+            }
+        }
+    }
+}
